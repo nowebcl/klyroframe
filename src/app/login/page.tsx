@@ -103,9 +103,14 @@ export default function LoginPage() {
                 </form>
 
                 <div className="text-center">
-                    <p className="text-[10px] text-gray-300 font-bold uppercase tracking-[0.3em]">
-                        Vibe Coding Edition • 2024
-                    </p>
+                    <a
+                        href="https://www.noweb.cl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] text-gray-300 font-bold uppercase tracking-[0.3em] hover:text-black transition-colors"
+                    >
+                        Desarrollado por noweb labs • 2025
+                    </a>
                 </div>
             </div>
         </div>
