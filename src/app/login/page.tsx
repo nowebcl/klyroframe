@@ -9,8 +9,9 @@ import Image from "next/image";
 export default function LoginPage() {
     const { status } = useSession();
     const router = useRouter();
-    const [email, setEmail] = useState("admin@klyroframe.local");
-    const [password, setPassword] = useState("changeme123");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isHuman, setIsHuman] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -22,6 +23,12 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!isHuman) {
+            setError("Por favor, confirma que no eres un robot");
+            return;
+        }
+
         setLoading(true);
         setError("");
 
@@ -91,6 +98,20 @@ export default function LoginPage() {
                             className="w-full px-6 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-black/5 text-sm font-semibold transition-all"
                             required
                         />
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 bg-gray-50/50 border border-gray-100 rounded-2xl cursor-pointer hover:bg-gray-100/50 transition-all select-none" onClick={() => setIsHuman(!isHuman)}>
+                        <div className={`w-6 h-6 border-2 rounded-lg flex items-center justify-center transition-all ${isHuman ? 'bg-green-500 border-green-500' : 'bg-white border-gray-200'}`}>
+                            {isHuman && (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                            )}
+                        </div>
+                        <span className="text-xs font-bold text-gray-500">No soy un robot</span>
+                        <div className="ml-auto opacity-10 grayscale">
+                            <Image src="/logo.png" alt="bot" width={20} height={20} />
+                        </div>
                     </div>
 
                     <button
