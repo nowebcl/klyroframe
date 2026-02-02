@@ -5,13 +5,15 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import Image from "next/image";
+import ReCAPTCHA from "react-google-recaptcha";
+import { sendLoginNotification, verifyCaptcha } from "@/lib/actions";
 
 export default function LoginPage() {
     const { status } = useSession();
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isHuman, setIsHuman] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -24,13 +26,21 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!isHuman) {
-            setError("Por favor, confirma que no eres un robot");
+        if (!captchaToken) {
+            setError("Por favor, completa el captcha");
             return;
         }
 
         setLoading(true);
         setError("");
+
+        // 1. Verificar Captcha en el Servidor
+        const isVerified = await verifyCaptcha(captchaToken);
+        if (!isVerified.success) {
+            setError("Error en la verificación del Captcha");
+            setLoading(false);
+            return;
+        }
 
         try {
             const res = await signIn("credentials", {
@@ -43,6 +53,8 @@ export default function LoginPage() {
                 setError("Credenciales inválidas");
                 setLoading(false);
             } else {
+                // 2. Avisar por correo (No bloqueante)
+                sendLoginNotification(email);
                 router.push("/");
             }
         } catch (err) {
@@ -100,18 +112,11 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    <div className="flex items-center gap-3 p-4 bg-gray-50/50 border border-gray-100 rounded-2xl cursor-pointer hover:bg-gray-100/50 transition-all select-none" onClick={() => setIsHuman(!isHuman)}>
-                        <div className={`w-6 h-6 border-2 rounded-lg flex items-center justify-center transition-all ${isHuman ? 'bg-green-500 border-green-500' : 'bg-white border-gray-200'}`}>
-                            {isHuman && (
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                            )}
-                        </div>
-                        <span className="text-xs font-bold text-gray-500">No soy un robot</span>
-                        <div className="ml-auto opacity-10 grayscale">
-                            <Image src="/logo.png" alt="bot" width={20} height={20} />
-                        </div>
+                    <div className="flex justify-center py-2">
+                        <ReCAPTCHA
+                            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"} // Test key for demo
+                            onChange={(token) => setCaptchaToken(token)}
+                        />
                     </div>
 
                     <button
