@@ -51,14 +51,17 @@ export default function LoginPage() {
             <div className="w-full max-w-[420px] space-y-10">
                 <div className="flex flex-col items-center space-y-4">
                     <Image
-                        src="/logo.jpg"
+                        src="/logo.png"
                         alt="Klyroframe Logo"
-                        width={240}
+                        width={80}
                         height={80}
-                        className="h-auto w-full max-w-[220px]"
+                        className="h-20 w-20 object-contain rounded-2xl"
                         priority
                     />
-                    <p className="text-gray-400 font-semibold tracking-widest uppercase text-[10px] text-center">Project Management Studio</p>
+                    <div className="text-center">
+                        <h1 className="text-3xl font-black text-gray-900 tracking-tighter">KLYROFRAME</h1>
+                        <p className="text-gray-400 font-semibold tracking-widest uppercase text-[10px]">Project Management Studio</p>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.04)] space-y-8">

@@ -21,11 +21,11 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             <div className="p-8 flex items-center justify-between">
                 <Link href="/" className="block">
                     <Image
-                        src="/logo.jpg"
+                        src="/logo.png"
                         alt="Klyroframe Logo"
-                        width={180}
-                        height={60}
-                        className="h-auto w-full max-w-[160px]"
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 object-contain rounded-xl"
                         priority
                     />
                 </Link>
