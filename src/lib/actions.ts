@@ -215,9 +215,12 @@ export async function addTaskComment(projectId: string, taskId: string, content:
         return { error: error.message };
     }
 }
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendLoginNotification(email: string) {
+    if (!process.env.RESEND_API_KEY) {
+        console.warn("RESEND_API_KEY is not defined. Skipping notification.");
+        return { error: "API key missing" };
+    }
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const headersList = await headers();
     const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'IP desconocida';
 

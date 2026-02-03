@@ -22,7 +22,9 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
                 >
                     <MenuIcon className="w-6 h-6" />
                 </button>
-                <h2 className="text-base md:text-lg font-black text-gray-900 tracking-tight uppercase">{title}</h2>
+                <h2 className="text-base md:text-lg font-black text-gray-900 tracking-tight uppercase">
+                    {title} <span className="text-[10px] text-blue-500 ml-2">DEV MODE</span>
+                </h2>
             </div>
             {pathname === "/" && (
                 <ProjectFormDialog />
