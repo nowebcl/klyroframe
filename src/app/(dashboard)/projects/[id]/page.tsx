@@ -8,6 +8,7 @@ import NotesEditor from "@/components/notes/NotesEditor";
 import { finishProject } from "@/lib/actions";
 import { CheckCircleIcon, ExternalLinkIcon, CalendarIcon, UsersIcon, ListTodoIcon, StickyNoteIcon } from "lucide-react";
 import TaskList from "@/components/projects/TaskList";
+import { EditProjectDialog } from "@/components/projects/EditProjectDialog";
 
 export default async function ProjectDetailPage(props: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
@@ -48,7 +49,19 @@ export default async function ProjectDetailPage(props: { params: Promise<{ id: s
                                     {project.status}
                                 </span>
                             </div>
-                            <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-tight">{project.nombreProyecto}</h1>
+                            <div className="flex items-center gap-4">
+                                <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-tight">{project.nombreProyecto}</h1>
+                                <EditProjectDialog project={{
+                                    id: project.id,
+                                    nombreProyecto: project.nombreProyecto,
+                                    nombreCliente: project.nombreCliente,
+                                    whatsappCliente: project.whatsappCliente,
+                                    tipoProyecto: project.tipoProyecto,
+                                    descripcionMedida: project.descripcionMedida,
+                                    fechaInicio: project.fechaInicio,
+                                    fechaTermino: project.fechaTermino,
+                                }} />
+                            </div>
                             <div className="flex items-center gap-2 text-gray-400 font-bold">
                                 <UsersIcon className="w-5 h-5" />
                                 <span className="text-lg">{project.nombreCliente}</span>
@@ -166,6 +179,23 @@ export default async function ProjectDetailPage(props: { params: Promise<{ id: s
                             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Iniciado hace</p>
                             <p className="text-xl font-bold">{timeElapsedStr}</p>
                         </div>
+                    </div>
+
+                    <div className="pt-2">
+                        <EditProjectDialog project={{
+                            id: project.id,
+                            nombreProyecto: project.nombreProyecto,
+                            nombreCliente: project.nombreCliente,
+                            whatsappCliente: project.whatsappCliente,
+                            tipoProyecto: project.tipoProyecto,
+                            descripcionMedida: project.descripcionMedida,
+                            fechaInicio: project.fechaInicio,
+                            fechaTermino: project.fechaTermino,
+                        }}>
+                            <button className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-gray-100 transition-all active:scale-95 border border-white/10">
+                                Cambiar entrega
+                            </button>
+                        </EditProjectDialog>
                     </div>
                 </div>
             </div>

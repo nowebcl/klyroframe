@@ -40,6 +40,34 @@ export async function createProject(data: any) {
     }
 }
 
+export async function updateProject(id: string, data: any) {
+    const session = await getSession();
+    if (!session?.user || !(session.user as any).id) return { error: "Unauthorized" };
+
+    try {
+        const validated = projectSchema.parse(data);
+
+        await prisma.project.update({
+            where: { id, userId: (session.user as any).id },
+            data: {
+                nombreProyecto: validated.nombreProyecto,
+                nombreCliente: validated.nombreCliente,
+                whatsappCliente: validated.whatsappCliente,
+                tipoProyecto: validated.tipoProyecto,
+                descripcionMedida: validated.descripcionMedida,
+                fechaInicio: validated.fechaInicio,
+                fechaTermino: validated.fechaTermino,
+            },
+        });
+
+        revalidatePath("/");
+        revalidatePath(`/projects/${id}`);
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
+
 export async function finishProject(id: string) {
     const session = await getSession();
     if (!session?.user || !(session.user as any).id) return { error: "Unauthorized" };
