@@ -5,12 +5,16 @@ import { createPortal } from "react-dom";
 import { PlusIcon, XIcon } from "lucide-react";
 import { createProject } from "@/lib/actions";
 import { toast } from "sonner";
+import { formatInTimeZone } from 'date-fns-tz';
 
 export function ProjectFormDialog() {
     const [isOpen, setIsOpen] = useState(false);
     const [tipoProyecto, setTipoProyecto] = useState("");
     const [loading, setLoading] = useState(false);
     const [mounted, setMounted] = useState(false);
+
+    const nowInChile = formatInTimeZone(new Date(), 'America/Santiago', "yyyy-MM-dd'T'HH:mm");
+
 
     useEffect(() => {
         setMounted(true);
@@ -132,13 +136,14 @@ export function ProjectFormDialog() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] px-1">F. Inicio</label>
-                                    <input required name="fechaInicio" type="datetime-local" className="w-full px-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-xs focus:outline-none focus:ring-4 focus:ring-black/5" />
+                                    <input required name="fechaInicio" type="datetime-local" defaultValue={nowInChile} className="w-full px-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-xs focus:outline-none focus:ring-4 focus:ring-black/5" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] px-1">F. Entrega</label>
-                                    <input required name="fechaTermino" type="datetime-local" className="w-full px-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-xs focus:outline-none focus:ring-4 focus:ring-black/5" />
+                                    <input required name="fechaTermino" type="datetime-local" defaultValue={nowInChile} className="w-full px-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-xs focus:outline-none focus:ring-4 focus:ring-black/5" />
                                 </div>
                             </div>
+
 
                             <input type="hidden" name="whatsappCliente" value="+56" />
 

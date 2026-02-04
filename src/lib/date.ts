@@ -1,13 +1,20 @@
 import { format, differenceInMinutes, isBefore, isAfter } from 'date-fns';
+import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
 import { es } from 'date-fns/locale';
 
+const TIMEZONE = 'America/Santiago';
+
+export function getChileTime() {
+    return toZonedTime(new Date(), TIMEZONE);
+}
+
 export function formatDateDDMMYYYY(date: Date | string) {
-    return format(new Date(date), 'dd/MM/yyyy HH:mm', { locale: es });
+    return formatInTimeZone(new Date(date), TIMEZONE, 'dd/MM/yyyy HH:mm', { locale: es });
 }
 
 export function formatTimeRemaining(fechaTermino: Date | string) {
-    const hoy = new Date();
-    const termino = new Date(fechaTermino);
+    const hoy = getChileTime();
+    const termino = toZonedTime(new Date(fechaTermino), TIMEZONE);
     const diffMinutes = differenceInMinutes(termino, hoy);
 
     if (diffMinutes <= 0) return "0h 0m";
@@ -23,20 +30,19 @@ export function formatTimeRemaining(fechaTermino: Date | string) {
 }
 
 export function daysRemaining(fechaTermino: Date | string) {
-    const hoy = new Date();
-    const termino = new Date(fechaTermino);
+    const hoy = getChileTime();
+    const termino = toZonedTime(new Date(fechaTermino), TIMEZONE);
     const diffMinutes = differenceInMinutes(termino, hoy);
 
     if (diffMinutes <= 0) return 0;
 
-    // Return days as a decimal if needed, but for the progress text we'll use formatTimeRemaining
     return Math.max(0, Math.floor(diffMinutes / (24 * 60)));
 }
 
 export function calcProgress(fechaInicio: Date | string, fechaTermino: Date | string) {
-    const hoy = new Date().getTime();
-    const inicio = new Date(fechaInicio).getTime();
-    const termino = new Date(fechaTermino).getTime();
+    const hoy = getChileTime().getTime();
+    const inicio = toZonedTime(new Date(fechaInicio), TIMEZONE).getTime();
+    const termino = toZonedTime(new Date(fechaTermino), TIMEZONE).getTime();
 
     if (hoy <= inicio) return 0;
     if (hoy >= termino) return 100;
@@ -47,14 +53,14 @@ export function calcProgress(fechaInicio: Date | string, fechaTermino: Date | st
 }
 
 export function isOverdue(fechaTermino: Date | string) {
-    const hoy = new Date();
-    const termino = new Date(fechaTermino);
+    const hoy = getChileTime();
+    const termino = toZonedTime(new Date(fechaTermino), TIMEZONE);
     return isBefore(termino, hoy);
 }
 
 export function formatTimeElapsed(fechaInicio: Date | string) {
-    const hoy = new Date();
-    const inicio = new Date(fechaInicio);
+    const hoy = getChileTime();
+    const inicio = toZonedTime(new Date(fechaInicio), TIMEZONE);
 
     if (isAfter(inicio, hoy)) return "Aún no inicia";
 
@@ -72,3 +78,4 @@ export function formatTimeElapsed(fechaInicio: Date | string) {
     }
     return `${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
 }
+

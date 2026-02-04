@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Edit2Icon, XIcon } from "lucide-react";
 import { updateProject } from "@/lib/actions";
 import { toast } from "sonner";
+import { formatInTimeZone } from 'date-fns-tz';
 
 interface EditProjectDialogProps {
     project: {
@@ -21,6 +22,7 @@ interface EditProjectDialogProps {
 }
 
 export function EditProjectDialog({ project, children }: EditProjectDialogProps) {
+
     const [isOpen, setIsOpen] = useState(false);
     const [tipoProyecto, setTipoProyecto] = useState(project.tipoProyecto || "");
     const [loading, setLoading] = useState(false);
@@ -31,11 +33,9 @@ export function EditProjectDialog({ project, children }: EditProjectDialogProps)
     }, []);
 
     const formatForInput = (date: Date | string) => {
-        const d = new Date(date);
-        const z = d.getTimezoneOffset() * 60 * 1000;
-        const localDate = new Date(d.getTime() - z);
-        return localDate.toISOString().slice(0, 16);
+        return formatInTimeZone(new Date(date), 'America/Santiago', "yyyy-MM-dd'T'HH:mm");
     };
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

@@ -7,6 +7,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 import { projectSchema } from "./validators";
 import { revalidatePath } from "next/cache";
+import { getChileTime, formatDateDDMMYYYY } from "./date";
+
+
 
 async function getSession() {
     return await getServerSession(authOptions);
@@ -80,6 +83,8 @@ export async function finishProject(id: string) {
                 deliveredAt: new Date(),
             },
         });
+
+
 
         revalidatePath("/");
         revalidatePath("/finished");
@@ -236,8 +241,10 @@ export async function sendLoginNotification(email: string) {
                     <div style="background: #f4f4f4; padding: 15px; border-radius: 12px; margin: 20px 0;">
                         <p style="margin: 5px 0;"><strong>Usuario:</strong> ${email}</p>
                         <p style="margin: 5px 0;"><strong>Dirección IP:</strong> ${ip}</p>
-                        <p style="margin: 5px 0;"><strong>Fecha:</strong> ${new Date().toLocaleString('es-CL')}</p>
+                        <p style="margin: 5px 0;"><strong>Fecha:</strong> ${formatDateDDMMYYYY(new Date())}</p>
                     </div>
+
+
                     <p style="font-size: 12px; color: #666;">Este es un mensaje automático generado por Klyroframe.</p>
                 </div>
             `,

@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { fromZonedTime } from 'date-fns-tz';
+
+const TIMEZONE = 'America/Santiago';
 
 export const projectSchema = z.object({
     nombreProyecto: z.string().min(1, "El nombre del proyecto es obligatorio"),
@@ -6,9 +9,10 @@ export const projectSchema = z.object({
     whatsappCliente: z.string().min(1, "El WhatsApp es obligatorio"),
     tipoProyecto: z.string().optional(),
     descripcionMedida: z.string().optional(),
-    fechaInicio: z.preprocess((arg) => (typeof arg == "string" ? new Date(arg) : arg), z.date()),
-    fechaTermino: z.preprocess((arg) => (typeof arg == "string" ? new Date(arg) : arg), z.date()),
+    fechaInicio: z.preprocess((arg) => (typeof arg == "string" ? fromZonedTime(arg, TIMEZONE) : arg), z.date()),
+    fechaTermino: z.preprocess((arg) => (typeof arg == "string" ? fromZonedTime(arg, TIMEZONE) : arg), z.date()),
 });
+
 
 export const noteSchema = z.object({
     content: z.string().min(1, "La nota no puede estar vacía"),
